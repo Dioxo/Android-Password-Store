@@ -24,7 +24,7 @@ import java.io.IOException
  * Activity that encompasses both the initial clone as well as editing the server config for future
  * changes.
  */
-class GitServerConfigActivity : BaseGitActivity() {
+class GitServerConfigActivity : BaseGitActivity(R.layout.activity_git_clone) {
 
     private val binding by viewBinding(ActivityGitCloneBinding::inflate)
 
@@ -34,7 +34,6 @@ class GitServerConfigActivity : BaseGitActivity() {
         if (isClone) {
             binding.saveButton.text = getString(R.string.clone_button)
         }
-        setContentView(binding.root)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         binding.cloneProtocolGroup.check(when (protocol) {

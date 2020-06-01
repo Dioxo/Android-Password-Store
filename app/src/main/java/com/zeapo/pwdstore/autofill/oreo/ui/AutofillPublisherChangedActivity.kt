@@ -25,7 +25,7 @@ import com.zeapo.pwdstore.databinding.ActivityOreoAutofillPublisherChangedBindin
 import com.zeapo.pwdstore.utils.viewBinding
 
 @TargetApi(Build.VERSION_CODES.O)
-class AutofillPublisherChangedActivity : AppCompatActivity() {
+class AutofillPublisherChangedActivity : AppCompatActivity(R.layout.activity_oreo_autofill_publisher_changed) {
 
     companion object {
         private const val EXTRA_APP_PACKAGE =
@@ -50,7 +50,6 @@ class AutofillPublisherChangedActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
         setFinishOnTouchOutside(true)
 
         appPackage = intent.getStringExtra(EXTRA_APP_PACKAGE) ?: run {

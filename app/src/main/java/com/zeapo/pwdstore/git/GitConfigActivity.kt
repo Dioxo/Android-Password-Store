@@ -17,13 +17,12 @@ import com.zeapo.pwdstore.utils.PasswordRepository
 import com.zeapo.pwdstore.utils.viewBinding
 import org.eclipse.jgit.lib.Constants
 
-class GitConfigActivity : BaseGitActivity() {
+class GitConfigActivity : BaseGitActivity(R.layout.activity_git_config) {
 
     private val binding by viewBinding(ActivityGitConfigBinding::inflate)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         if (username.isEmpty())

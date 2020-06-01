@@ -10,6 +10,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.annotation.CallSuper
+import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
 import androidx.core.text.isDigitsOnly
@@ -30,7 +31,7 @@ import java.net.URI
  * Abstract AppCompatActivity that holds some information that is commonly shared across git-related
  * tasks and makes sense to be held here.
  */
-abstract class BaseGitActivity : AppCompatActivity() {
+abstract class BaseGitActivity(@LayoutRes contentLayoutRes: Int) : AppCompatActivity(contentLayoutRes) {
 
     lateinit var protocol: Protocol
     lateinit var connectionMode: ConnectionMode

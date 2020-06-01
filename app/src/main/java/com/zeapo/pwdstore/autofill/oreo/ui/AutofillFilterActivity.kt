@@ -39,7 +39,7 @@ import com.zeapo.pwdstore.utils.PasswordItem
 import com.zeapo.pwdstore.utils.viewBinding
 
 @TargetApi(Build.VERSION_CODES.O)
-class AutofillFilterView : AppCompatActivity() {
+class AutofillFilterView : AppCompatActivity(R.layout.activity_oreo_autofill_filter) {
 
     companion object {
         private const val HEIGHT_PERCENTAGE = 0.9
@@ -81,7 +81,6 @@ class AutofillFilterView : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
         setFinishOnTouchOutside(true)
 
         val params = window.attributes

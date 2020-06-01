@@ -13,7 +13,7 @@ import com.zeapo.pwdstore.R
 import com.zeapo.pwdstore.UserPreference
 import com.zeapo.pwdstore.utils.PasswordRepository
 
-open class GitOperationActivity : BaseGitActivity() {
+open class GitOperationActivity : BaseGitActivity(0) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         when (intent.extras?.getInt(REQUEST_ARG_OP)) {

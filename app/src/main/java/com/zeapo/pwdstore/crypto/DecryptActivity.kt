@@ -37,7 +37,6 @@ class DecryptActivity : BasePgpActivity(R.layout.decrypt_layout), OpenPgpService
         super.onCreate(savedInstanceState)
         bindToOpenKeychain(this)
         with(binding) {
-            setContentView(root)
             passwordCategory.text = relativeParentPath
             passwordFile.text = name
             passwordFile.setOnLongClickListener {
