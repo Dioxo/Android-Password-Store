@@ -39,6 +39,7 @@ android {
         exclude '.readme'
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
+        exclude 'plugin.properties'
     }
 
     buildTypes {
@@ -97,6 +98,7 @@ dependencies {
     implementation deps.third_party.commons_io
     implementation deps.third_party.commons_codec
     implementation deps.third_party.fastscroll
+    implementation deps.third_party.jgit_java7
     implementation(deps.third_party.jgit) {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }

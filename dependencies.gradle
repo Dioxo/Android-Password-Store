@@ -52,6 +52,7 @@ ext.deps = [
         fastscroll: 'me.zhanghai.android.fastscroll:library:1.1.4',
         jsch: 'com.jcraft:jsch:0.1.55',
         jgit: 'org.eclipse.jgit:org.eclipse.jgit:3.7.1.201504261725-r',
+        jgit_java7: 'org.eclipse.jgit:org.eclipse.jgit.java7:3.7.1.201504261725-r',
         leakcanary: 'com.squareup.leakcanary:leakcanary-android:2.3',
         openpgp_ktx: 'com.github.android-password-store:openpgp-ktx:2.0.0',
         sshj: 'com.hierynomus:sshj:0.29.0',
