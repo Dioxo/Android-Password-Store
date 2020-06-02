@@ -4,11 +4,13 @@
  */
 package com.zeapo.pwdstore.utils
 
+import android.accessibilityservice.AccessibilityServiceInfo
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
 import android.util.TypedValue
 import android.view.View
+import android.view.accessibility.AccessibilityManager
 import android.view.autofill.AutofillManager
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.IdRes
@@ -17,6 +19,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.getSystemService
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
+import com.zeapo.pwdstore.BuildConfig
 
 infix fun Int.hasFlag(flag: Int): Boolean {
     return this and flag == flag
@@ -43,6 +46,16 @@ fun Context.getEncryptedPrefs(fileName: String): SharedPreferences {
         EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
     )
 }
+
+val Context.isAccessibilityServiceEnabled: Boolean
+    get() {
+        val am = getSystemService<AccessibilityManager>() ?: return false
+        val runningServices = am
+            .getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC)
+        return runningServices
+            .map { it.id.substringBefore("/") }
+            .any { it == BuildConfig.APPLICATION_ID }
+    }
 
 /**
  * Extension function for [AlertDialog] that requests focus for the

@@ -22,6 +22,7 @@ import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MenuItem.OnActionExpandListener
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
@@ -65,6 +66,7 @@ import com.zeapo.pwdstore.utils.PasswordRepository.Companion.getRepositoryDirect
 import com.zeapo.pwdstore.utils.PasswordRepository.Companion.initialize
 import com.zeapo.pwdstore.utils.PasswordRepository.Companion.isInitialized
 import com.zeapo.pwdstore.utils.PasswordRepository.PasswordSortOrder.Companion.getSortOrder
+import com.zeapo.pwdstore.utils.isAccessibilityServiceEnabled
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.FilenameUtils
 import org.eclipse.jgit.api.Git
@@ -127,41 +129,49 @@ class PasswordStore : AppCompatActivity() {
         setContentView(R.layout.activity_pwdstore)
 
         // If user is eligible for Oreo autofill, prompt them to switch.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
-            !settings.getBoolean(PREFERENCE_SEEN_AUTOFILL_ONBOARDING, false)) {
-            MaterialAlertDialogBuilder(this).run {
-                @SuppressLint("InflateParams")
-                val layout =
-                    layoutInflater.inflate(R.layout.oreo_autofill_instructions, null)
-                layout.findViewById<AppCompatTextView>(R.id.intro_text).setText(R.string.autofill_onboarding_dialog_message)
-                val supportedBrowsersTextView =
-                    layout.findViewById<AppCompatTextView>(R.id.supportedBrowsers)
-                supportedBrowsersTextView.text =
-                    getInstalledBrowsersWithAutofillSupportLevel(context).joinToString(
-                        separator = "\n"
-                    ) {
-                        val appLabel = it.first
-                        val supportDescription = when (it.second) {
-                            BrowserAutofillSupportLevel.None -> getString(R.string.oreo_autofill_no_support)
-                            BrowserAutofillSupportLevel.FlakyFill -> getString(R.string.oreo_autofill_flaky_fill_support)
-                            BrowserAutofillSupportLevel.PasswordFill -> getString(R.string.oreo_autofill_password_fill_support)
-                            BrowserAutofillSupportLevel.GeneralFill -> getString(R.string.oreo_autofill_general_fill_support)
-                            BrowserAutofillSupportLevel.GeneralFillAndSave -> getString(R.string.oreo_autofill_general_fill_and_save_support)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (!settings.getBoolean(PREFERENCE_SEEN_AUTOFILL_ONBOARDING, false)) {
+                MaterialAlertDialogBuilder(this).run {
+                    @SuppressLint("InflateParams")
+                    val layout =
+                        layoutInflater.inflate(R.layout.oreo_autofill_instructions, null)
+                    layout.findViewById<AppCompatTextView>(R.id.intro_text).setText(R.string.autofill_onboarding_dialog_message)
+                    val supportedBrowsersTextView =
+                        layout.findViewById<AppCompatTextView>(R.id.supportedBrowsers)
+                    supportedBrowsersTextView.text =
+                        getInstalledBrowsersWithAutofillSupportLevel(context).joinToString(
+                            separator = "\n"
+                        ) {
+                            val appLabel = it.first
+                            val supportDescription = when (it.second) {
+                                BrowserAutofillSupportLevel.None -> getString(R.string.oreo_autofill_no_support)
+                                BrowserAutofillSupportLevel.FlakyFill -> getString(R.string.oreo_autofill_flaky_fill_support)
+                                BrowserAutofillSupportLevel.PasswordFill -> getString(R.string.oreo_autofill_password_fill_support)
+                                BrowserAutofillSupportLevel.GeneralFill -> getString(R.string.oreo_autofill_general_fill_support)
+                                BrowserAutofillSupportLevel.GeneralFillAndSave -> getString(R.string.oreo_autofill_general_fill_and_save_support)
+                            }
+                            "$appLabel: $supportDescription"
                         }
-                        "$appLabel: $supportDescription"
+                    setView(layout)
+                    setTitle(R.string.autofill_onboarding_dialog_title)
+                    setPositiveButton(R.string.dialog_ok) { _, _ ->
+                        startActivity(Intent(Settings.ACTION_REQUEST_SET_AUTOFILL_SERVICE).apply {
+                            data = Uri.parse("package:${BuildConfig.APPLICATION_ID}")
+                        })
                     }
-                setView(layout)
-                setTitle(R.string.autofill_onboarding_dialog_title)
-                setPositiveButton(R.string.dialog_ok) { _, _ ->
-                    startActivity(Intent(Settings.ACTION_REQUEST_SET_AUTOFILL_SERVICE).apply {
-                        data = Uri.parse("package:${BuildConfig.APPLICATION_ID}")
-                    })
+                    setNegativeButton(R.string.dialog_cancel) { _, _ -> }
+                    setOnDismissListener {
+                        settings.edit { putBoolean(PREFERENCE_SEEN_AUTOFILL_ONBOARDING, true) }
+                    }
+                    show()
                 }
-                setNegativeButton(R.string.dialog_cancel) { _, _ -> }
-                setOnDismissListener {
-                    settings.edit { putBoolean(PREFERENCE_SEEN_AUTOFILL_ONBOARDING, true) }
+            }
+            if (isAccessibilityServiceEnabled) {
+                Toast.makeText(this, getString(R.string.oreo_autofill_disable_accessibility_service), Toast.LENGTH_LONG).show()
+                try {
+                    startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                } catch (_: Exception) {
                 }
-                show()
             }
         }
 

@@ -51,6 +51,7 @@ import com.zeapo.pwdstore.utils.BiometricAuthenticator
 import com.zeapo.pwdstore.utils.PasswordRepository
 import com.zeapo.pwdstore.utils.autofillManager
 import com.zeapo.pwdstore.utils.getEncryptedPrefs
+import com.zeapo.pwdstore.utils.isAccessibilityServiceEnabled
 import me.msfjarvis.openpgpktx.util.OpenPgpUtils
 import org.apache.commons.io.FileUtils
 import java.io.File
@@ -582,16 +583,6 @@ class UserPreference : AppCompatActivity() {
         // Canonicalize line endings to '\n'.
         File("$filesDir/.ssh_key").writeText(lines.joinToString("\n"))
     }
-
-    private val isAccessibilityServiceEnabled: Boolean
-        get() {
-            val am = getSystemService<AccessibilityManager>() ?: return false
-            val runningServices = am
-                .getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC)
-            return runningServices
-                .map { it.id.substringBefore("/") }
-                .any { it == BuildConfig.APPLICATION_ID }
-        }
 
     private val isAutofillServiceSupported: Boolean
         get() {

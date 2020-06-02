@@ -78,14 +78,6 @@ class AutofillService : AccessibilityService(), CoroutineScope by CoroutineScope
     }
 
     override fun onCreate() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Toast.makeText(this, getString(R.string.oreo_autofill_disable_accessibility_service), Toast.LENGTH_LONG).show()
-            try {
-                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
-            } catch (_: Exception) {
-            }
-            stopSelf()
-        }
         super.onCreate()
         instance = this
     }
